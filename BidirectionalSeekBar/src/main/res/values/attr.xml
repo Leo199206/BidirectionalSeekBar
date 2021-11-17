@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BidirectionalSeekBar">
+        <attr name="thumbEnableColor" format="color" />
+        <attr name="thumbDisableColor" format="color" />
+        <attr name="thumbStrokeEnableColor" format="color" />
+        <attr name="thumbStrokeDisableColor" format="color" />
+        <attr name="trackBgEnableColor" format="color" />
+        <attr name="trackBgDisableColor" format="color" />
+        <attr name="trackFgEnableColor" format="color" />
+        <attr name="trackFgDisableColor" format="color" />
+        <attr name="thumbSize" format="dimension" />
+        <attr name="thumbStrokeSize" format="dimension" />
+        <attr name="trackHeight" format="dimension" />
+    </declare-styleable>
+</resources>
