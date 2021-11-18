@@ -18,6 +18,10 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/Theme.BidirectionalSeekBar.PopupOverlay" />
 
+        <com.plant.bidirectionalseekbar.BidirectionalSeekBar
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:layout_constraintTop_toTopOf="parent" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_main" />

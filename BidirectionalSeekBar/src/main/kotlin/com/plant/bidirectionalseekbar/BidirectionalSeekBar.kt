@@ -3,7 +3,11 @@ package com.plant.bidirectionalseekbar
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
+import kotlin.math.abs
 
 /**
  * <pre>
@@ -30,21 +34,31 @@ class BidirectionalSeekBar : View {
     private val trackFgPaint by lazy { Paint() }
     private var thumbEnableColor = Color.WHITE
     private var thumbDisableColor = Color.WHITE
-    private var thumbStrokeEnableColor = Color.BLUE
-    private var thumbStrokeDisableColor = Color.DKGRAY
+    private var thumbStrokeEnableColor = Color.RED
+    private var thumbStrokeDisableColor = Color.RED
     private var trackBgEnableColor = Color.GRAY
     private var trackBgDisableColor = Color.DKGRAY
     private var trackFgEnableColor = Color.BLUE
     private var trackFgDisableColor = Color.BLACK
     private var thumbSize = 50
-    private var thumbStrokeSize = 2
+    private var thumbStrokeSize = 60
     private var trackHeight = 10
-    private val leftThumbRect = RectF()
-    private val rightThumbRect = RectF()
-    private val leftThumbStrokeRect = RectF()
-    private val rightThumbStrokeRect = RectF()
-    private val trackBgRect = RectF()
-    private val trackFgRect = RectF()
+    private var leftThumbX = 0f
+    private var rightThumbX = 0f
+    private var centerY = 0f;
+    private var leftBorderX = 0f
+    private var rightBorderX = 0f;
+    private var thumbRadius = 0f
+    private var thumbStrokeRadius = 0f
+    private var distanceY: Int = 0
+    private var distanceX: Int = 0
+    private var firstY: Int = 0
+    private var firstX: Int = 0
+    private var slidingStarX = 0f
+    private var slidingStarY = 0f
+    private val touchSlop: Int by lazy {
+        ViewConfiguration.get(context).scaledTouchSlop
+    }
 
 
     /**
@@ -85,6 +99,8 @@ class BidirectionalSeekBar : View {
         )
         trackHeight =
             array.getDimensionPixelSize(R.styleable.BidirectionalSeekBar_trackHeight, trackHeight)
+        thumbRadius = thumbSize / 2f
+        thumbStrokeRadius = thumbStrokeSize / 2f
         array.recycle()
     }
 
@@ -140,6 +156,7 @@ class BidirectionalSeekBar : View {
         trackBgPaint.style = Paint.Style.FILL
         trackBgPaint.strokeJoin = Paint.Join.ROUND
         trackBgPaint.strokeCap = Paint.Cap.ROUND
+        trackBgPaint.strokeWidth = trackHeight.toFloat()
         trackBgPaint.isAntiAlias = true
         trackBgPaint.isDither = true
         if (isEnabled) {
@@ -159,6 +176,7 @@ class BidirectionalSeekBar : View {
         trackFgPaint.strokeCap = Paint.Cap.ROUND
         trackFgPaint.isAntiAlias = true
         trackFgPaint.isDither = true
+        trackFgPaint.strokeWidth = trackHeight.toFloat()
         if (isEnabled) {
             trackFgPaint.color = trackFgEnableColor
         } else {
@@ -212,6 +230,19 @@ class BidirectionalSeekBar : View {
      */
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+        initPosition()
+    }
+
+
+    /**
+     * 初始化滑块绘制位置
+     */
+    private fun initPosition() {
+        leftThumbX = thumbStrokeRadius
+        rightThumbX = width - thumbStrokeRadius
+        leftBorderX = leftThumbX
+        rightBorderX = rightThumbX
+        centerY = height / 2f
     }
 
 
@@ -221,29 +252,118 @@ class BidirectionalSeekBar : View {
      */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        onDrawLeftThumb(canvas)
-        onDrawRightThumb(canvas)
+        canvas.drawLine(leftBorderX, centerY, rightBorderX, centerY, trackBgPaint)
+        canvas.drawLine(leftThumbX, centerY, rightThumbX, centerY, trackFgPaint)
+        canvas.drawCircle(leftThumbX, centerY, thumbStrokeRadius, thumbStrokePaint)
+        canvas.drawCircle(rightThumbX, centerY, thumbStrokeRadius, thumbStrokePaint)
+        canvas.drawCircle(leftThumbX, centerY, thumbRadius, thumbPaint)
+        canvas.drawCircle(rightThumbX, centerY, thumbRadius, thumbPaint)
     }
 
 
     /**
-     * 绘制左侧滑块
+     * 手指是否在左侧滑块按钮上
+     * @return Boolean
      */
-    private fun onDrawLeftThumb(canvas: Canvas) {
-        val radius = thumbSize / 2f
-        val cx = leftThumbRect.left + radius
-        val cy = leftThumbRect.top + radius
-        canvas.drawCircle(cx, cy, radius, thumbPaint)
+    private fun isInLeftThumbRange(x: Float, y: Float): Boolean {
+        var rect = RectF(
+            leftThumbX - thumbStrokeRadius,
+            0f,
+            leftThumbX + thumbStrokeRadius,
+            height.toFloat()
+        )
+        return rect.contains(x, y) && x >= leftBorderX && x <= rightBorderX
     }
 
     /**
-     * 绘制右侧滑块
+     * 手指是否在左侧滑块按钮上
+     * @return Boolean
      */
-    private fun onDrawRightThumb(canvas: Canvas) {
-        val radius = thumbSize / 2f
-        val cx = rightThumbRect.left + radius
-        val cy = rightThumbRect.top + radius
-        canvas.drawCircle(cx, cy, radius, thumbPaint)
+    private fun isInRightThumbRange(x: Float, y: Float): Boolean {
+        var rect = RectF(
+            rightThumbX - thumbStrokeRadius,
+            0f,
+            rightThumbX + thumbStrokeRadius,
+            height.toFloat()
+        )
+        return rect.contains(x, y) && x >= leftBorderX && x <= rightBorderX
+    }
+
+
+    /**
+     * 滑动事件拦截，处理滑动效果
+     * @param event MotionEvent
+     * @return Boolean
+     */
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                slidingStarX = event.x
+                slidingStarY = event.y
+
+            }
+            MotionEvent.ACTION_MOVE -> {
+                handlerPosition(event)
+                slidingStarX = event.x
+                slidingStarY = event.y
+            }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                slidingStarX = 0f
+                slidingStarY = 0f
+            }
+        }
+        return true
+    }
+
+    /**
+     * 处理滑动位置
+     * @param event MotionEvent
+     */
+    private fun handlerPosition(event: MotionEvent) {
+        if (isInLeftThumbRange(slidingStarX, slidingStarY)) {
+            var distance = event.x - slidingStarX
+            leftThumbX += distance
+            if (leftThumbX < leftBorderX) {
+                leftThumbX = leftBorderX
+            }
+            postInvalidate()
+        } else if (isInRightThumbRange(slidingStarX, slidingStarY)) {
+            var distance = event.x - slidingStarX
+            rightThumbX += distance
+            if (rightThumbX > rightBorderX) {
+                rightThumbX = rightBorderX
+            }
+            postInvalidate()
+        }
+    }
+
+
+    /**
+     * 处理滑动事件冲突
+     * @param event MotionEvent
+     * @return Boolean
+     */
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        val x = event.x.toInt()
+        val y = event.y.toInt()
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                firstX = x
+                firstY = y
+            }
+            MotionEvent.ACTION_MOVE -> {
+                distanceX = abs(x - firstX)
+                distanceY = abs(y - firstY)
+                if (distanceX > touchSlop && distanceX > distanceY) {
+                    parent.requestDisallowInterceptTouchEvent(true)
+                }
+            }
+            MotionEvent.ACTION_UP -> {
+                firstX = 0
+                firstY = 0
+            }
+        }
+        return super.dispatchTouchEvent(event)
     }
 
 }
