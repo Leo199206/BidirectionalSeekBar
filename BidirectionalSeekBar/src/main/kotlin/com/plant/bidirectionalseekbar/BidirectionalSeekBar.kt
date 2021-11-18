@@ -267,9 +267,9 @@ class BidirectionalSeekBar : View {
      */
     private fun isInLeftThumbRange(x: Float, y: Float): Boolean {
         var rect = RectF(
-            leftThumbX - thumbStrokeRadius,
+            leftThumbX - thumbStrokeSize,
             0f,
-            leftThumbX + thumbStrokeRadius,
+            leftThumbX + thumbStrokeSize,
             height.toFloat()
         )
         return rect.contains(x, y) && x >= leftBorderX && x <= rightBorderX
@@ -281,9 +281,9 @@ class BidirectionalSeekBar : View {
      */
     private fun isInRightThumbRange(x: Float, y: Float): Boolean {
         var rect = RectF(
-            rightThumbX - thumbStrokeRadius,
+            rightThumbX - thumbStrokeSize,
             0f,
-            rightThumbX + thumbStrokeRadius,
+            rightThumbX + thumbStrokeSize,
             height.toFloat()
         )
         return rect.contains(x, y) && x >= leftBorderX && x <= rightBorderX
