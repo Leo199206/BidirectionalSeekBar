@@ -1,6 +1,7 @@
 package com.example.bidirectionalseekbar
 
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -10,6 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import com.example.bidirectionalseekbar.databinding.ActivityMainBinding
+import com.plant.bidirectionalseekbar.BidirectionalSeekBar
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,6 +34,12 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
+        binding.seekBar.setSeekBarChangeListener(object :
+            BidirectionalSeekBar.OnSeekBarChangeLister {
+            override fun onSeekBarChange(startProgress: Float, endProgress: Float) {
+                Log.d("onSeekBarChange", "start=${startProgress}  end=${endProgress}")
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

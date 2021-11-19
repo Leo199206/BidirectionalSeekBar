@@ -7,7 +7,10 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
+import java.util.logging.Logger
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * <pre>
@@ -59,6 +62,9 @@ class BidirectionalSeekBar : View {
     private val touchSlop: Int by lazy {
         ViewConfiguration.get(context).scaledTouchSlop
     }
+    private var startProgress: Float = 0f
+    private var endProgress: Float = 0f
+    private var seekBarListener: OnSeekBarChangeLister? = null
 
 
     /**
@@ -272,7 +278,7 @@ class BidirectionalSeekBar : View {
             leftThumbX + thumbStrokeSize,
             height.toFloat()
         )
-        return rect.contains(x, y) && x >= leftBorderX && x <= rightBorderX
+        return rect.contains(x, y)
     }
 
     /**
@@ -286,7 +292,7 @@ class BidirectionalSeekBar : View {
             rightThumbX + thumbStrokeSize,
             height.toFloat()
         )
-        return rect.contains(x, y) && x >= leftBorderX && x <= rightBorderX
+        return rect.contains(x, y)
     }
 
 
@@ -304,8 +310,7 @@ class BidirectionalSeekBar : View {
             }
             MotionEvent.ACTION_MOVE -> {
                 handlerPosition(event)
-                slidingStarX = event.x
-                slidingStarY = event.y
+                setUpdateProgress()
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 slidingStarX = 0f
@@ -326,14 +331,27 @@ class BidirectionalSeekBar : View {
             if (leftThumbX < leftBorderX) {
                 leftThumbX = leftBorderX
             }
+            if (leftThumbX > rightBorderX) {
+                leftThumbX = rightBorderX
+            }
+            slidingStarX = leftThumbX
+            slidingStarY = event.y
             postInvalidate()
         } else if (isInRightThumbRange(slidingStarX, slidingStarY)) {
             var distance = event.x - slidingStarX
             rightThumbX += distance
+            if (rightThumbX < leftBorderX) {
+                rightThumbX = leftBorderX
+            }
             if (rightThumbX > rightBorderX) {
                 rightThumbX = rightBorderX
             }
+            slidingStarX = rightThumbX
+            slidingStarY = event.y
             postInvalidate()
+        } else {
+            slidingStarX = event.x
+            slidingStarY = event.y
         }
     }
 
@@ -366,4 +384,39 @@ class BidirectionalSeekBar : View {
         return super.dispatchTouchEvent(event)
     }
 
+
+    /**
+     * 更新当前进度
+     */
+    private fun setUpdateProgress() {
+        var startProgress = (leftThumbX - thumbStrokeRadius) / (width - thumbStrokeSize)
+        var endProgress = (rightThumbX - thumbStrokeRadius) / (width - thumbStrokeSize)
+        startProgress = min(startProgress, endProgress)
+        endProgress = max(startProgress, endProgress)
+        Log.d("setUpdateProgress", "startProgress=${startProgress} endProgress=${endProgress}")
+        seekBarListener?.onSeekBarChange(startProgress, endProgress)
+    }
+
+
+    /**
+     * 进度回调
+     * @param listener OnSeekBarChangeLister
+     */
+    fun setSeekBarChangeListener(listener: OnSeekBarChangeLister) {
+        this.seekBarListener = listener
+    }
+
+
+    /**
+     * 滑动回调接口
+     */
+    interface OnSeekBarChangeLister {
+
+        /**
+         * 滑动回调方法
+         * @param startProgress Float
+         * @param endProgress Float
+         */
+        fun onSeekBarChange(startProgress: Float, endProgress: Float)
+    }
 }
