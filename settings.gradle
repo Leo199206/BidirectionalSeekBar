@@ -1,3 +1,2 @@
-rootProject.name = "BidirectionalSeekBar"
 include ':app'
 include ':BidirectionalSeekBar'
