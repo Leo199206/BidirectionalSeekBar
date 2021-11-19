@@ -69,6 +69,7 @@ class BidirectionalSeekBar : View {
     private var endTotalValue = 100f
     private var startValue = 0f
     private var endValue = 100f
+    private var isEnable = true
 
     /**
      * 自定义属性初始化
@@ -305,7 +306,7 @@ class BidirectionalSeekBar : View {
      * @return Boolean
      */
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (!isEnabled) {
+        if (!isEnable) {
             return false
         }
         when (event.action) {
@@ -480,8 +481,8 @@ class BidirectionalSeekBar : View {
      * 是否可滑动
      * @param enabled Boolean
      */
-    override fun setEnabled(enabled: Boolean) {
-        super.setEnabled(enabled)
+    fun setEnable(enabled: Boolean) {
+        this.isEnable = enabled
         initPaint()
     }
 
