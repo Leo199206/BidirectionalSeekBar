@@ -135,7 +135,7 @@ class BidirectionalSeekBar : View {
         thumbPaint.strokeCap = Paint.Cap.ROUND
         thumbPaint.isAntiAlias = true
         thumbPaint.isDither = true
-        if (isEnabled) {
+        if (isEnable) {
             thumbPaint.color = thumbEnableColor
         } else {
             thumbPaint.color = thumbDisableColor
@@ -151,7 +151,7 @@ class BidirectionalSeekBar : View {
         thumbStrokePaint.strokeCap = Paint.Cap.ROUND
         thumbStrokePaint.isAntiAlias = true
         thumbStrokePaint.isDither = true
-        if (isEnabled) {
+        if (isEnable) {
             thumbStrokePaint.color = thumbStrokeEnableColor
         } else {
             thumbStrokePaint.color = thumbStrokeDisableColor
@@ -169,7 +169,7 @@ class BidirectionalSeekBar : View {
         trackBgPaint.strokeWidth = trackHeight.toFloat()
         trackBgPaint.isAntiAlias = true
         trackBgPaint.isDither = true
-        if (isEnabled) {
+        if (isEnable) {
             trackBgPaint.color = trackBgEnableColor
         } else {
             trackBgPaint.color = trackBgDisableColor
@@ -187,7 +187,7 @@ class BidirectionalSeekBar : View {
         trackFgPaint.isAntiAlias = true
         trackFgPaint.isDither = true
         trackFgPaint.strokeWidth = trackHeight.toFloat()
-        if (isEnabled) {
+        if (isEnable) {
             trackFgPaint.color = trackFgEnableColor
         } else {
             trackFgPaint.color = trackFgEnableColor
