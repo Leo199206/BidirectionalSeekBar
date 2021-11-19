@@ -306,9 +306,6 @@ class BidirectionalSeekBar : View {
      * @return Boolean
      */
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (!isEnable) {
-            return false
-        }
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 slidingStarX = event.x
@@ -316,12 +313,17 @@ class BidirectionalSeekBar : View {
 
             }
             MotionEvent.ACTION_MOVE -> {
-                handlerPosition(event)
-                setUpdateProgress()
+                if (isEnable) {
+                    handlerPosition(event)
+                    setUpdateProgress()
+                }
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 slidingStarX = 0f
                 slidingStarY = 0f
+                if (!isEnable) {
+                    seekBarListener?.onUnEnable()
+                }
             }
         }
         return true
@@ -503,5 +505,10 @@ class BidirectionalSeekBar : View {
             startValue: Float,
             endValue: Float
         )
+
+        /**
+         * 未开启滑动回调
+         */
+        fun onUnEnable()
     }
 }

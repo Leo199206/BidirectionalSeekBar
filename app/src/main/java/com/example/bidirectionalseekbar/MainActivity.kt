@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         binding.seekBar.setOnClickListener {
             Toast.makeText(this, "被点击", Toast.LENGTH_LONG).show()
         }
+        binding.seekBar.setEnable(false)
         binding.seekBar.setSeekBarChangeListener(object :
             BidirectionalSeekBar.OnSeekBarChangeLister {
 
@@ -48,6 +49,10 @@ class MainActivity : AppCompatActivity() {
                 startValue: Float,
                 endValue: Float
             ) {
+            }
+
+            override fun onUnEnable() {
+                Log.d("onUnEnable", "onUnEnable")
             }
         })
     }
