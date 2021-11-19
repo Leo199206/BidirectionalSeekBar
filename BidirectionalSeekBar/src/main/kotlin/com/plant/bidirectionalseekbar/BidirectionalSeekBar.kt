@@ -190,7 +190,7 @@ class BidirectionalSeekBar : View {
         if (isEnable) {
             trackFgPaint.color = trackFgEnableColor
         } else {
-            trackFgPaint.color = trackFgEnableColor
+            trackFgPaint.color = trackFgDisableColor
         }
     }
 
