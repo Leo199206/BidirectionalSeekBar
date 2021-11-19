@@ -486,6 +486,7 @@ class BidirectionalSeekBar : View {
     fun setEnable(enabled: Boolean) {
         this.isEnable = enabled
         initPaint()
+        postInvalidate()
     }
 
 
