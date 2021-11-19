@@ -10,6 +10,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.example.bidirectionalseekbar.databinding.ActivityMainBinding
 import com.plant.bidirectionalseekbar.BidirectionalSeekBar
 
@@ -34,10 +35,19 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
+        binding.seekBar.setValue(30f, 130f, 60f, 80f)
+        binding.seekBar.setOnClickListener {
+            Toast.makeText(this, "被点击", Toast.LENGTH_LONG).show()
+        }
         binding.seekBar.setSeekBarChangeListener(object :
             BidirectionalSeekBar.OnSeekBarChangeLister {
-            override fun onSeekBarChange(startProgress: Float, endProgress: Float) {
-                Log.d("onSeekBarChange", "start=${startProgress}  end=${endProgress}")
+
+            override fun onSeekBarChange(
+                startProgress: Float,
+                endProgress: Float,
+                startValue: Float,
+                endValue: Float
+            ) {
             }
         })
     }
