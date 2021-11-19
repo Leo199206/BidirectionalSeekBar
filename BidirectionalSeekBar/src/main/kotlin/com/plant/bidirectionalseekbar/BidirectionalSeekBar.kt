@@ -305,7 +305,6 @@ class BidirectionalSeekBar : View {
      * @return Boolean
      */
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        callOnClick()
         if (!isEnabled) {
             return false
         }
