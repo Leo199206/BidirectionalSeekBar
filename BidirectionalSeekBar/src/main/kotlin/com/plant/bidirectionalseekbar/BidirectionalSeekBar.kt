@@ -46,11 +46,11 @@ class BidirectionalSeekBar : View {
     private var thumbSize = 50
     private var thumbStrokeSize = 60
     private var trackHeight = 10
-    private var leftThumbX = 0f
-    private var rightThumbX = 0f
+    private var startThumbX = 0f
+    private var endThumbX = 0f
     private var centerY = 0f;
-    private var leftBorderX = 0f
-    private var rightBorderX = 0f;
+    private var startBorderX = 0f
+    private var endBorderX = 0f;
     private var thumbRadius = 0f
     private var thumbStrokeRadius = 0f
     private var distanceY: Int = 0
@@ -219,7 +219,7 @@ class BidirectionalSeekBar : View {
         val size = MeasureSpec.getSize(measureSpec)
         return when (mode) {
             MeasureSpec.AT_MOST -> {
-                size or MEASURED_STATE_TOO_SMALL
+                defaultSize or MEASURED_STATE_TOO_SMALL
             }
             MeasureSpec.EXACTLY -> {
                 size
@@ -248,10 +248,10 @@ class BidirectionalSeekBar : View {
      * 初始化滑块绘制位置
      */
     private fun initPosition() {
-        leftThumbX = thumbStrokeRadius
-        rightThumbX = width - thumbStrokeRadius
-        leftBorderX = leftThumbX
-        rightBorderX = rightThumbX
+        startThumbX = thumbStrokeRadius
+        endThumbX = width - thumbStrokeRadius
+        startBorderX = startThumbX
+        endBorderX = endThumbX
         centerY = height / 2f
     }
 
@@ -262,12 +262,12 @@ class BidirectionalSeekBar : View {
      */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.drawLine(leftBorderX, centerY, rightBorderX, centerY, trackBgPaint)
-        canvas.drawLine(leftThumbX, centerY, rightThumbX, centerY, trackFgPaint)
-        canvas.drawCircle(leftThumbX, centerY, thumbStrokeRadius, thumbStrokePaint)
-        canvas.drawCircle(rightThumbX, centerY, thumbStrokeRadius, thumbStrokePaint)
-        canvas.drawCircle(leftThumbX, centerY, thumbRadius, thumbPaint)
-        canvas.drawCircle(rightThumbX, centerY, thumbRadius, thumbPaint)
+        canvas.drawLine(startBorderX, centerY, endBorderX, centerY, trackBgPaint)
+        canvas.drawLine(startThumbX, centerY, endThumbX, centerY, trackFgPaint)
+        canvas.drawCircle(startThumbX, centerY, thumbStrokeRadius, thumbStrokePaint)
+        canvas.drawCircle(endThumbX, centerY, thumbStrokeRadius, thumbStrokePaint)
+        canvas.drawCircle(startThumbX, centerY, thumbRadius, thumbPaint)
+        canvas.drawCircle(endThumbX, centerY, thumbRadius, thumbPaint)
     }
 
 
@@ -277,9 +277,9 @@ class BidirectionalSeekBar : View {
      */
     private fun isInLeftThumbRange(x: Float, y: Float): Boolean {
         var rect = RectF(
-            leftThumbX - thumbStrokeSize,
+            startThumbX - thumbStrokeSize,
             0f,
-            leftThumbX + thumbStrokeSize,
+            startThumbX + thumbStrokeSize,
             height.toFloat()
         )
         return rect.contains(x, y)
@@ -291,9 +291,9 @@ class BidirectionalSeekBar : View {
      */
     private fun isInRightThumbRange(x: Float, y: Float): Boolean {
         var rect = RectF(
-            rightThumbX - thumbStrokeSize,
+            endThumbX - thumbStrokeSize,
             0f,
-            rightThumbX + thumbStrokeSize,
+            endThumbX + thumbStrokeSize,
             height.toFloat()
         )
         return rect.contains(x, y)
@@ -322,7 +322,7 @@ class BidirectionalSeekBar : View {
                 slidingStarX = 0f
                 slidingStarY = 0f
                 if (!isEnable) {
-                    seekBarListener?.onUnEnable()
+                    seekBarListener?.onUnEnable(this)
                 }
             }
         }
@@ -337,27 +337,27 @@ class BidirectionalSeekBar : View {
         when {
             isInLeftThumbRange(slidingStarX, slidingStarY) -> {
                 var distance = event.x - slidingStarX
-                leftThumbX += distance
-                if (leftThumbX < leftBorderX) {
-                    leftThumbX = leftBorderX
+                startThumbX += distance
+                if (startThumbX < startBorderX) {
+                    startThumbX = startBorderX
                 }
-                if (leftThumbX > rightBorderX) {
-                    leftThumbX = rightBorderX
+                if (startThumbX > endBorderX) {
+                    startThumbX = endBorderX
                 }
-                slidingStarX = leftThumbX
+                slidingStarX = startThumbX
                 slidingStarY = event.y
                 postInvalidate()
             }
             isInRightThumbRange(slidingStarX, slidingStarY) -> {
                 var distance = event.x - slidingStarX
-                rightThumbX += distance
-                if (rightThumbX < leftBorderX) {
-                    rightThumbX = leftBorderX
+                endThumbX += distance
+                if (endThumbX < startBorderX) {
+                    endThumbX = startBorderX
                 }
-                if (rightThumbX > rightBorderX) {
-                    rightThumbX = rightBorderX
+                if (endThumbX > endBorderX) {
+                    endThumbX = endBorderX
                 }
-                slidingStarX = rightThumbX
+                slidingStarX = endThumbX
                 slidingStarY = event.y
                 postInvalidate()
             }
@@ -402,12 +402,12 @@ class BidirectionalSeekBar : View {
      * 更新当前进度
      */
     private fun setUpdateProgress() {
-        var start = (leftThumbX - thumbStrokeRadius) / getSeekBarWith()
-        var end = (rightThumbX - thumbStrokeRadius) / getSeekBarWith()
-        startProgress = min(start, end)
-        endProgress = max(start, end)
-        startValue = getSeekBarTotalValue() * startProgress + this.startTotalValue
-        endValue = getSeekBarTotalValue() * endProgress + this.startTotalValue
+        val progress = getCurrentProgress()
+        startProgress = progress.first
+        endProgress = progress.second
+        val progressValue = getCurrentProgressValue()
+        startValue = progressValue.first
+        endValue = progressValue.second
         Log.d(
             "setUpdateProgress",
             "startProgress=${startProgress} " +
@@ -416,11 +416,36 @@ class BidirectionalSeekBar : View {
                     "endProgressValue=${endValue}"
         )
         seekBarListener?.onSeekBarChange(
+            this,
             startProgress,
             endProgress,
             startValue,
             endValue
         )
+    }
+
+
+    /**
+     * 当前进度，值范围[0~1f]
+     * @return Pair<Float, Float>
+     */
+    open fun getCurrentProgress(): Pair<Float, Float> {
+        var start = (startThumbX - thumbStrokeRadius) / getSeekBarWith()
+        var end = (endThumbX - thumbStrokeRadius) / getSeekBarWith()
+        val startProgress = min(start, end);
+        val endProgress = max(start, end)
+        return Pair(startProgress, endProgress)
+    }
+
+    /**
+     * 当前进度值，值范围为[setValue]设置的范围
+     * @return Float
+     */
+    open fun getCurrentProgressValue(): Pair<Float, Float> {
+        val progress = getCurrentProgress();
+        val startValue = getSeekBarTotalValue() * progress.first + this.startTotalValue
+        val endValue = getSeekBarTotalValue() * progress.second + this.startTotalValue
+        return Pair(startValue, endValue)
     }
 
 
@@ -463,8 +488,8 @@ class BidirectionalSeekBar : View {
         startProgress = (this.startValue - this.startTotalValue) / total
         endProgress = (this.endValue - this.startTotalValue) / total
         post {
-            leftThumbX = startProgress * getSeekBarWith() + thumbStrokeRadius
-            rightThumbX = endProgress * getSeekBarWith() + thumbStrokeRadius
+            startThumbX = startProgress * getSeekBarWith() + thumbStrokeRadius
+            endThumbX = endProgress * getSeekBarWith() + thumbStrokeRadius
             postInvalidate()
         }
     }
@@ -501,6 +526,7 @@ class BidirectionalSeekBar : View {
          * @param endProgress Float
          */
         fun onSeekBarChange(
+            view: BidirectionalSeekBar,
             startProgress: Float,
             endProgress: Float,
             startValue: Float,
@@ -510,6 +536,6 @@ class BidirectionalSeekBar : View {
         /**
          * 未开启滑动回调
          */
-        fun onUnEnable()
+        fun onUnEnable(view: BidirectionalSeekBar)
     }
 }
