@@ -256,10 +256,10 @@ class BidirectionalSeekBar : View {
      * 初始化滑块绘制位置
      */
     private fun initPosition() {
-        startThumbX = thumbStrokeRadius
-        endThumbX = width - thumbStrokeRadius
-        startBorderX = startThumbX + paddingLeft
-        endBorderX = endThumbX - paddingRight
+        startThumbX = thumbStrokeRadius + paddingLeft
+        endThumbX = width - thumbStrokeRadius - paddingRight
+        startBorderX = startThumbX
+        endBorderX = endThumbX 
         centerY = height / 2f
     }
 
