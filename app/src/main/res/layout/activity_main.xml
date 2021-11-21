@@ -17,30 +17,96 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/purple_200"
             app:popupTheme="@style/Theme.BidirectionalSeekBar.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
+
+    <TextView
+        android:id="@+id/tv_age"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:paddingHorizontal="15dp"
+        android:text="年龄" />
+
     <com.plant.bidirectionalseekbar.BidirectionalSeekBar
-        android:id="@+id/seek_bar"
+        android:id="@+id/seekbar_age"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        app:thumbSize="23dp"
-        app:thumbEnableColor="@color/white"
+        android:paddingLeft="15dp"
+        android:paddingTop="20dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="20dp"
         app:thumbDisableColor="@color/white"
-        app:thumbStrokeEnableColor="@color/teal_200"
+        app:thumbEnableColor="@color/white"
+        app:thumbSize="23dp"
         app:thumbStrokeDisableColor="@color/teal_700"
-        app:trackFgDisableColor="@color/teal_700"
-        app:trackFgEnableColor="@color/teal_200"
+        app:thumbStrokeEnableColor="@color/teal_200"
+        app:thumbStrokeSize="25dp"
         app:trackBgDisableColor="@color/cardview_shadow_start_color"
         app:trackBgEnableColor="@color/cardview_shadow_start_color"
+        app:trackFgDisableColor="@color/teal_700"
+        app:trackFgEnableColor="@color/teal_200" />
+
+
+    <TextView
+        android:id="@+id/tv_height"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:paddingHorizontal="15dp"
+        android:text="身高" />
+
+    <com.plant.bidirectionalseekbar.BidirectionalSeekBar
+        android:id="@+id/seekbar_height"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp"
         android:paddingTop="20dp"
+        android:paddingRight="15dp"
         android:paddingBottom="20dp"
-        app:thumbStrokeSize="25dp" />
+        app:thumbDisableColor="@color/white"
+        app:thumbEnableColor="@color/white"
+        app:thumbSize="23dp"
+        app:thumbStrokeDisableColor="@color/teal_700"
+        app:thumbStrokeEnableColor="@color/teal_200"
+        app:thumbStrokeSize="25dp"
+        app:trackBgDisableColor="@color/cardview_shadow_start_color"
+        app:trackBgEnableColor="@color/cardview_shadow_start_color"
+        app:trackFgDisableColor="@color/teal_700"
+        app:trackFgEnableColor="@color/teal_200" />
+
+    <TextView
+        android:id="@+id/tv_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:paddingHorizontal="15dp"
+        android:text="体重" />
+
+    <com.plant.bidirectionalseekbar.BidirectionalSeekBar
+        android:id="@+id/seekbar_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="20dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="20dp"
+        app:thumbDisableColor="@color/white"
+        app:thumbEnableColor="@color/white"
+        app:thumbSize="23dp"
+        app:thumbStrokeDisableColor="@color/teal_700"
+        app:thumbStrokeEnableColor="@color/teal_200"
+        app:thumbStrokeSize="25dp"
+        app:trackBgDisableColor="@color/cardview_shadow_start_color"
+        app:trackBgEnableColor="@color/cardview_shadow_start_color"
+        app:trackFgDisableColor="@color/teal_700"
+        app:trackFgEnableColor="@color/teal_200" />
 
 
 </LinearLayout>

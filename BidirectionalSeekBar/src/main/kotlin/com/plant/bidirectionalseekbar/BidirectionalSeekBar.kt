@@ -259,7 +259,7 @@ class BidirectionalSeekBar : View {
         startThumbX = thumbStrokeRadius + paddingLeft
         endThumbX = width - thumbStrokeRadius - paddingRight
         startBorderX = startThumbX
-        endBorderX = endThumbX 
+        endBorderX = endThumbX
         centerY = height / 2f
     }
 
@@ -438,15 +438,16 @@ class BidirectionalSeekBar : View {
      * @return Pair<Float, Float>
      */
     open fun getCurrentProgress(): Pair<Float, Float> {
-        var start = (startThumbX - thumbStrokeRadius) / getSeekBarWith()
-        var end = (endThumbX - thumbStrokeRadius) / getSeekBarWith()
+        var width = getSeekBarWith()
+        var start = (startThumbX - paddingLeft - thumbStrokeRadius) / width
+        var end = (endThumbX - paddingLeft - thumbStrokeRadius) / width
         val startProgress = min(start, end);
         val endProgress = max(start, end)
         return Pair(startProgress, endProgress)
     }
 
     /**
-     * 当前进度值，值范围为[setValue]设置的范围
+     * 当前进度值，值范围为[init]设置的范围
      * @return Float
      */
     open fun getCurrentProgressValue(): Pair<Float, Float> {
@@ -462,7 +463,7 @@ class BidirectionalSeekBar : View {
      * @return Float
      */
     private fun getSeekBarWith(): Float {
-        return (width - paddingLeft - paddingRight - thumbStrokeSize).toFloat()
+        return (endBorderX - startBorderX)
     }
 
 
@@ -482,12 +483,14 @@ class BidirectionalSeekBar : View {
      * @param startValue Float
      * @param endValue Float
      */
-    fun setValue(
+    fun init(
         startTotalValue: Float,
         endTotalValue: Float,
         startValue: Float,
-        endValue: Float
+        endValue: Float,
+        listener: OnSeekBarChangeLister
     ) {
+        this.seekBarListener = listener
         this.startTotalValue = startTotalValue
         this.endTotalValue = endTotalValue
         this.endValue = endValue
@@ -498,6 +501,13 @@ class BidirectionalSeekBar : View {
         post {
             startThumbX = startProgress * getSeekBarWith() + thumbStrokeRadius + paddingLeft
             endThumbX = endProgress * getSeekBarWith() + thumbStrokeRadius + paddingLeft
+            this.seekBarListener?.onSeekBarChange(
+                this,
+                startProgress,
+                endProgress,
+                startValue,
+                endValue
+            )
             postInvalidate()
         }
     }

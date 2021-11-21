@@ -23,9 +23,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-        binding.seekBar.setValue(30f, 130f, 60f, 80f)
-        binding.seekBar.setEnable(true)
-        binding.seekBar.setSeekBarChangeListener(object :
+        initAgeSeekBar()
+        initHeightSeekBar()
+        initWidgetSeekBar()
+    }
+
+    /**
+     * 体重范围
+     */
+    private fun initWidgetSeekBar() {
+        binding.seekbarWidget.init(30f, 180f, 60f, 80f, object :
             BidirectionalSeekBar.OnSeekBarChangeLister {
 
             override fun onSeekBarChange(
@@ -35,6 +42,52 @@ class MainActivity : AppCompatActivity() {
                 startValue: Float,
                 endValue: Float
             ) {
+                binding.tvWidget.text = "widget: ${startValue.toInt()}kg - ${endValue.toInt()}kg"
+            }
+
+            override fun onUnEnable(view: BidirectionalSeekBar) {
+            }
+        })
+    }
+
+    /**
+     * 年龄范围
+     */
+    private fun initAgeSeekBar() {
+        binding.seekbarAge.init(18f, 80f, 20f, 40f, object :
+            BidirectionalSeekBar.OnSeekBarChangeLister {
+
+            override fun onSeekBarChange(
+                view: BidirectionalSeekBar,
+                startProgress: Float,
+                endProgress: Float,
+                startValue: Float,
+                endValue: Float
+            ) {
+                binding.tvAge.text = "age: ${startValue.toInt()}岁 - ${endValue.toInt()}岁"
+            }
+
+            override fun onUnEnable(view: BidirectionalSeekBar) {
+            }
+        })
+    }
+
+
+    /**
+     * 年龄范围
+     */
+    private fun initHeightSeekBar() {
+        binding.seekbarHeight.init(120f, 200f, 170f, 180f, object :
+            BidirectionalSeekBar.OnSeekBarChangeLister {
+
+            override fun onSeekBarChange(
+                view: BidirectionalSeekBar,
+                startProgress: Float,
+                endProgress: Float,
+                startValue: Float,
+                endValue: Float
+            ) {
+                binding.tvHeight.text = "height: ${startValue.toInt()}cm - ${endValue.toInt()}cm"
             }
 
             override fun onUnEnable(view: BidirectionalSeekBar) {
