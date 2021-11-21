@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity() {
      * 年龄范围
      */
     private fun initHeightSeekBar() {
+        binding.seekbarHeight.setEnable(false)
         binding.seekbarHeight.init(120f, 200f, 170f, 180f, object :
             BidirectionalSeekBar.OnSeekBarChangeLister {
 
@@ -91,6 +92,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onUnEnable(view: BidirectionalSeekBar) {
+                Toast.makeText(this@MainActivity, "SeekBar Disable", Toast.LENGTH_LONG).show()
             }
         })
     }
