@@ -5,7 +5,7 @@
 
 #### 效果预览
 
-<img src="https://raw.githubusercontent.com/Leo199206/BidirectionalSeekBar/device-2021-11-21-105818.gif" width="300" heght="500" align=center />
+<img src="https://github.com/Leo199206/BidirectionalSeekBar/blob/main/device-2021-11-21-105818.gif?raw=true" width="300" heght="500" align=center />
 
 #### 依赖
 
