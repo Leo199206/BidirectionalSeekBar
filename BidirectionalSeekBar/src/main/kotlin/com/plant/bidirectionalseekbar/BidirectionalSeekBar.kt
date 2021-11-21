@@ -202,8 +202,16 @@ class BidirectionalSeekBar : View {
      */
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        val width = measureSize(widthMeasureSpec, 300)
-        val height = measureSize(heightMeasureSpec, 60)
+        var width = measureSize(widthMeasureSpec, 300)
+        var height = measureSize(heightMeasureSpec, 60)
+        val withMode = MeasureSpec.getMode(widthMeasureSpec)
+        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
+        if (withMode != MeasureSpec.EXACTLY) {
+            width += paddingLeft + paddingRight
+        }
+        if (heightMode != MeasureSpec.EXACTLY) {
+            height += paddingTop + paddingBottom
+        }
         setMeasuredDimension(width, height)
     }
 
@@ -250,8 +258,8 @@ class BidirectionalSeekBar : View {
     private fun initPosition() {
         startThumbX = thumbStrokeRadius
         endThumbX = width - thumbStrokeRadius
-        startBorderX = startThumbX
-        endBorderX = endThumbX
+        startBorderX = startThumbX + paddingLeft
+        endBorderX = endThumbX - paddingRight
         centerY = height / 2f
     }
 
@@ -454,7 +462,7 @@ class BidirectionalSeekBar : View {
      * @return Float
      */
     private fun getSeekBarWith(): Float {
-        return (measuredWidth - thumbStrokeSize).toFloat()
+        return (width - paddingLeft - paddingRight - thumbStrokeSize).toFloat()
     }
 
 
@@ -488,8 +496,8 @@ class BidirectionalSeekBar : View {
         startProgress = (this.startValue - this.startTotalValue) / total
         endProgress = (this.endValue - this.startTotalValue) / total
         post {
-            startThumbX = startProgress * getSeekBarWith() + thumbStrokeRadius
-            endThumbX = endProgress * getSeekBarWith() + thumbStrokeRadius
+            startThumbX = startProgress * getSeekBarWith() + thumbStrokeRadius + paddingLeft
+            endThumbX = endProgress * getSeekBarWith() + thumbStrokeRadius + paddingLeft
             postInvalidate()
         }
     }

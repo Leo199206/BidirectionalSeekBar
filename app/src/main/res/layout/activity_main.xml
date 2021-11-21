@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center_horizontal"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -25,7 +25,22 @@
     <com.plant.bidirectionalseekbar.BidirectionalSeekBar
         android:id="@+id/seek_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        app:thumbSize="23dp"
+        app:thumbEnableColor="@color/white"
+        app:thumbDisableColor="@color/white"
+        app:thumbStrokeEnableColor="@color/teal_200"
+        app:thumbStrokeDisableColor="@color/teal_700"
+        app:trackFgDisableColor="@color/teal_700"
+        app:trackFgEnableColor="@color/teal_200"
+        app:trackBgDisableColor="@color/cardview_shadow_start_color"
+        app:trackBgEnableColor="@color/cardview_shadow_start_color"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        app:thumbStrokeSize="25dp" />
 
 
 </LinearLayout>
