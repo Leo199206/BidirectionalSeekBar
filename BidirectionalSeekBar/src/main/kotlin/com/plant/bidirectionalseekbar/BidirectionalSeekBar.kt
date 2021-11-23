@@ -130,6 +130,7 @@ class BidirectionalSeekBar : View {
      * 初始化滑块画笔
      */
     private fun initThumbPaint() {
+        thumbPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP)
         thumbPaint.style = Paint.Style.FILL
         thumbPaint.strokeJoin = Paint.Join.ROUND
         thumbPaint.strokeCap = Paint.Cap.ROUND
@@ -146,6 +147,7 @@ class BidirectionalSeekBar : View {
      * 初始化滑块画笔
      */
     private fun initThumbStrokePaint() {
+        thumbStrokePaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP)
         thumbStrokePaint.style = Paint.Style.FILL
         thumbStrokePaint.strokeJoin = Paint.Join.ROUND
         thumbStrokePaint.strokeCap = Paint.Cap.ROUND
@@ -273,9 +275,19 @@ class BidirectionalSeekBar : View {
         canvas.drawLine(startBorderX, centerY, endBorderX, centerY, trackBgPaint)
         canvas.drawLine(startThumbX, centerY, endThumbX, centerY, trackFgPaint)
         canvas.drawCircle(startThumbX, centerY, thumbStrokeRadius, thumbStrokePaint)
-        canvas.drawCircle(endThumbX, centerY, thumbStrokeRadius, thumbStrokePaint)
         canvas.drawCircle(startThumbX, centerY, thumbRadius, thumbPaint)
+    }
+
+
+    /**
+     * 绘制前景
+     * @param canvas Canvas
+     */
+    override fun onDrawForeground(canvas: Canvas) {
+        super.onDrawForeground(canvas)
+        canvas.drawCircle(endThumbX, centerY, thumbStrokeRadius, thumbStrokePaint)
         canvas.drawCircle(endThumbX, centerY, thumbRadius, thumbPaint)
+
     }
 
 
