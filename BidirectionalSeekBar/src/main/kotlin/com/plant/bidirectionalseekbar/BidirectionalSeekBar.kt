@@ -276,18 +276,8 @@ class BidirectionalSeekBar : View {
         canvas.drawLine(startThumbX, centerY, endThumbX, centerY, trackFgPaint)
         canvas.drawCircle(startThumbX, centerY, thumbStrokeRadius, thumbStrokePaint)
         canvas.drawCircle(startThumbX, centerY, thumbRadius, thumbPaint)
-    }
-
-
-    /**
-     * 绘制前景
-     * @param canvas Canvas
-     */
-    override fun onDrawForeground(canvas: Canvas) {
-        super.onDrawForeground(canvas)
         canvas.drawCircle(endThumbX, centerY, thumbStrokeRadius, thumbStrokePaint)
         canvas.drawCircle(endThumbX, centerY, thumbRadius, thumbPaint)
-
     }
 
 
