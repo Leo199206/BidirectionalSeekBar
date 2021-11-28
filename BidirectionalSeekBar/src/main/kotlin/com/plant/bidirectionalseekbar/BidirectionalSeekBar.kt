@@ -70,6 +70,8 @@ class BidirectionalSeekBar : View {
     private var startValue = 0f
     private var endValue = 100f
     private var isEnable = true
+    private var isTouchLeftThumb = false
+    private var isTouchRightThumb = false
 
     /**
      * 自定义属性初始化
@@ -334,6 +336,8 @@ class BidirectionalSeekBar : View {
                 if (!isEnable) {
                     seekBarListener?.onUnEnable(this)
                 }
+                isTouchLeftThumb = false
+                isTouchRightThumb = false
             }
         }
         return true
@@ -345,7 +349,8 @@ class BidirectionalSeekBar : View {
      */
     private fun handlerPosition(event: MotionEvent) {
         when {
-            isInLeftThumbRange(slidingStarX, slidingStarY) -> {
+            isInLeftThumbRange(slidingStarX, slidingStarY) && !isTouchRightThumb -> {
+                isTouchLeftThumb = true
                 var distance = event.x - slidingStarX
                 startThumbX += distance
                 if (startThumbX < startBorderX) {
@@ -358,7 +363,8 @@ class BidirectionalSeekBar : View {
                 slidingStarY = event.y
                 postInvalidate()
             }
-            isInRightThumbRange(slidingStarX, slidingStarY) -> {
+            isInRightThumbRange(slidingStarX, slidingStarY) && !isTouchLeftThumb -> {
+                isTouchRightThumb = true
                 var distance = event.x - slidingStarX
                 endThumbX += distance
                 if (endThumbX < startBorderX) {
