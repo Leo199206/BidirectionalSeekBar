@@ -22,7 +22,7 @@ allprojects {
 + 添加以下maven依赖配置到app模块，gradle文件下
 
 ```
-implementation  'com.github.Leo199206:BidirectionalSeekBar:1.0.8'
+implementation  'com.github.Leo199206:BidirectionalSeekBar:1.0.10'
 ```
 
 #### 添加到布局
