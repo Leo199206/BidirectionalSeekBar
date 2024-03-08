@@ -119,7 +119,7 @@ class RangeSeekBar : View {
             array.getDimensionPixelSize(R.styleable.RangeSeekBar_thumbSize, thumbSize)
         thumbStrokeSize = array.getDimensionPixelSize(
             R.styleable.RangeSeekBar_thumbStrokeSize,
-            thumbStrokeSize
+            thumbSize
         )
         trackHeight =
             array.getDimensionPixelSize(R.styleable.RangeSeekBar_trackHeight, trackHeight)
@@ -293,6 +293,9 @@ class RangeSeekBar : View {
         maxProgressPercent = (this.rangeMaxValue - this.minValue) / total
         minThumbX = minProgressPercent * getSeekBarWith() + thumbStrokeRadius + paddingLeft
         maxThumbX = maxProgressPercent * getSeekBarWith() + thumbStrokeRadius + paddingLeft
+        slidingMinThumbX = minThumbX
+        slidingMaxThumbX = maxThumbX
+        slidingStarY = centerY
         canvas.drawLine(minBorderX, centerY, maxBorderX, centerY, trackBgPaint)
         canvas.drawLine(minThumbX, centerY, maxThumbX, centerY, trackFgPaint)
         canvas.drawCircle(minThumbX, centerY, thumbStrokeRadius, thumbStrokePaint)
@@ -379,7 +382,7 @@ class RangeSeekBar : View {
         if (onDragMaxThumb) {
             val distance = event.x - slidingMaxThumbX
             val targetX = maxThumbX + distance
-            maxThumbX = if (event.x < slidingMinThumbX && targetX < minThumbX) {
+            maxThumbX = if (event.x < slidingMinThumbX) {
                 minThumbX
             } else {
                 targetX
@@ -390,14 +393,12 @@ class RangeSeekBar : View {
             if (maxThumbX > maxBorderX) {
                 maxThumbX = maxBorderX
             }
-            slidingMaxThumbX = maxThumbX
-            slidingStarY = event.y
             setUpdateProgress(false)
             postInvalidate()
         } else if (onDragMinThumb) {
             val distance = event.x - slidingMinThumbX
             val targetX = minThumbX + distance
-            minThumbX = if (event.x > slidingMaxThumbX && targetX > maxThumbX) {
+            minThumbX = if (event.x > slidingMaxThumbX) {
                 maxThumbX
             } else {
                 targetX
@@ -408,8 +409,6 @@ class RangeSeekBar : View {
             if (minThumbX > maxBorderX) {
                 minThumbX = maxBorderX
             }
-            slidingMinThumbX = minThumbX
-            slidingStarY = event.y
             setUpdateProgress(false)
             postInvalidate()
         }
