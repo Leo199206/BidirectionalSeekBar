@@ -28,7 +28,7 @@ implementation  'com.github.Leo199206:BidirectionalSeekBar:1.0.10'
 #### 添加到布局
 
 ```
-    <com.plant.bidirectionalseekbar.BidirectionalSeekBar
+    <com.plant.bidirectionalseekbar.RangeSeekBar
         android:id="@+id/seekbar_age"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

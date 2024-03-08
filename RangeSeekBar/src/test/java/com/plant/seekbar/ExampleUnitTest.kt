@@ -1,4 +1,4 @@
-package com.plant.bidirectionalseekbar
+package com.plant.seekbar
 
 import org.junit.Test
 

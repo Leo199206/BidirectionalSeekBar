@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="BidirectionalSeekBar">
+    <declare-styleable name="RangeSeekBar">
         <attr name="thumbEnableColor" format="color" />
         <attr name="thumbDisableColor" format="color" />
         <attr name="thumbStrokeEnableColor" format="color" />

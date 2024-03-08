@@ -1,18 +1,10 @@
 package com.example.bidirectionalseekbar
 
 import android.os.Bundle
-import android.util.Log
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import com.example.bidirectionalseekbar.databinding.ActivityMainBinding
-import com.plant.bidirectionalseekbar.BidirectionalSeekBar
+import com.plant.seekbar.RangeSeekBar
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,20 +24,18 @@ class MainActivity : AppCompatActivity() {
      * 体重范围
      */
     private fun initWidgetSeekBar() {
-        binding.seekbarWidget.init(30f, 180f, 60f, 80f, object :
-            BidirectionalSeekBar.OnSeekBarChangeLister {
-
-            override fun onSeekBarChange(
-                view: BidirectionalSeekBar,
-                startProgress: Float,
-                endProgress: Float,
-                startValue: Float,
-                endValue: Float
+        binding.seekbarWidget.setRange(30f, 180f)
+        binding.seekbarWidget.setCurrentRange(60f, 80f)
+        binding.seekbarWidget.setSeekBarChangeListener(object :
+            RangeSeekBar.OnSeekBarChangeLister {
+            override fun onRangeSeekBarDragEnd(
+                view: RangeSeekBar,
+                rangeMinValue: Float,
+                rangeMaxValue: Float
             ) {
-                binding.tvWidget.text = "widget: ${startValue.toInt()}kg - ${endValue.toInt()}kg"
-            }
-
-            override fun onUnEnable(view: BidirectionalSeekBar) {
+                super.onRangeSeekBarDragEnd(view, rangeMinValue, rangeMaxValue)
+                binding.tvWidget.text =
+                    "widget: ${rangeMinValue.toInt()}kg - ${rangeMaxValue.toInt()}kg"
             }
         })
     }
@@ -54,47 +44,48 @@ class MainActivity : AppCompatActivity() {
      * 年龄范围
      */
     private fun initAgeSeekBar() {
-        binding.seekbarAge.init(18f, 80f, 20f, 40f, object :
-            BidirectionalSeekBar.OnSeekBarChangeLister {
-
-            override fun onSeekBarChange(
-                view: BidirectionalSeekBar,
-                startProgress: Float,
-                endProgress: Float,
-                startValue: Float,
-                endValue: Float
+        binding.seekbarAge.setRange(18f, 80f)
+        binding.seekbarAge.setCurrentRange(20f, 40f)
+        binding.seekbarAge.setSeekBarChangeListener(object :
+            RangeSeekBar.OnSeekBarChangeLister {
+            override fun onRangeSeekBarDragEnd(
+                view: RangeSeekBar,
+                rangeMinValue: Float,
+                rangeMaxValue: Float
             ) {
-                binding.tvAge.text = "age: ${startValue.toInt()}岁 - ${endValue.toInt()}岁"
-            }
-
-            override fun onUnEnable(view: BidirectionalSeekBar) {
+                super.onRangeSeekBarDragEnd(view, rangeMinValue, rangeMaxValue)
+                binding.tvAge.text =
+                    "widget: ${rangeMinValue.toInt()}岁 - ${rangeMaxValue.toInt()}岁"
             }
         })
     }
 
 
     /**
-     * 年龄范围
+     * 身高范围
      */
     private fun initHeightSeekBar() {
         binding.seekbarHeight.setEnable(false)
-        binding.seekbarHeight.init(120f, 200f, 170f, 180f, object :
-            BidirectionalSeekBar.OnSeekBarChangeLister {
-
-            override fun onSeekBarChange(
-                view: BidirectionalSeekBar,
-                startProgress: Float,
-                endProgress: Float,
-                startValue: Float,
-                endValue: Float
+        binding.seekbarAge.setRange(120f, 200f)
+        binding.seekbarAge.setCurrentRange(170f, 180f)
+        binding.seekbarAge.setSeekBarChangeListener(object :
+            RangeSeekBar.OnSeekBarChangeLister {
+            override fun onRangeSeekBarDragEnd(
+                view: RangeSeekBar,
+                rangeMinValue: Float,
+                rangeMaxValue: Float
             ) {
-                binding.tvHeight.text = "height: ${startValue.toInt()}cm - ${endValue.toInt()}cm"
+                super.onRangeSeekBarDragEnd(view, rangeMinValue, rangeMaxValue)
+                binding.tvHeight.text =
+                    "height: ${rangeMinValue.toInt()}cm - ${rangeMaxValue.toInt()}cm"
             }
 
-            override fun onUnEnable(view: BidirectionalSeekBar) {
+            override fun onDisableClick(view: RangeSeekBar) {
+                super.onDisableClick(view)
                 Toast.makeText(this@MainActivity, "SeekBar Disable", Toast.LENGTH_LONG).show()
             }
         })
+
     }
 
 }

@@ -1,4 +1,4 @@
-package com.plant.bidirectionalseekbar
+package com.plant.seekbar
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
