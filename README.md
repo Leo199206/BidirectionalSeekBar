@@ -22,13 +22,13 @@ allprojects {
 + 添加以下maven依赖配置到app模块，gradle文件下
 
 ```
-implementation  'com.github.Leo199206:BidirectionalSeekBar:1.0.10'
+implementation  'com.github.Leo199206:BidirectionalSeekBar:1.0.11'
 ```
 
 #### 添加到布局
 
 ```
-    <com.plant.bidirectionalseekbar.RangeSeekBar
+    <com.plant.seekbar.RangeSeekBar
         android:id="@+id/seekbar_age"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,20 +53,19 @@ implementation  'com.github.Leo199206:BidirectionalSeekBar:1.0.10'
 + 代码配置
 
 ```
-seekbarAge.init(18f, 80f, 20f, 40f, object :
-            BidirectionalSeekBar.OnSeekBarChangeLister {
-
-            override fun onSeekBarChange(
-                view: BidirectionalSeekBar,
-                startProgress: Float,
-                endProgress: Float,
-                startValue: Float,
-                endValue: Float
+        seekbar.setRange(30f, 180f)
+        seekbar.setCurrentRange(60f, 80f)
+        seekbar.setSeekBarChangeListener(object :
+            RangeSeekBar.OnSeekBarChangeLister {
+            override fun onRangeSeekBarDragEnd(
+                view: RangeSeekBar,
+                rangeMinValue: Float,
+                rangeMaxValue: Float
             ) {
-                binding.tvAge.text = "age: ${startValue.toInt()} - ${endValue.toInt()}"
-            }
-
-            override fun onUnEnable(view: BidirectionalSeekBar) {
+                super.onRangeSeekBarDragEnd(view, rangeMinValue, rangeMaxValue)
+                // 拖动结束回调
+                binding.tvWidget.text =
+                    "widget: ${rangeMinValue.toInt()}kg - ${rangeMaxValue.toInt()}kg"
             }
         })
 
@@ -74,18 +73,18 @@ seekbarAge.init(18f, 80f, 20f, 40f, object :
 
 #### 已定义样式属性
 
-| 属性  | 说明 |
-| --- | --- |
-| thumbEnableColor | 可滑动状态下，滑块颜色 |
-| thumbDisableColor | 不可滑动状态下，滑块颜色 |
-| thumbStrokeEnableColor | 可滑动状态下，底层滑块颜色 |
-| thumbStrokeDisableColor | 不可滑动状态下，底层滑块颜色  |
-| trackBgEnableColor | 可滑动状态下，度总长度颜色  | 
-| trackBgDisableColor | 不可滑动状态下，进度总长度颜色 | 
-| trackFgEnableColor | 可滑动状态下，进度条颜色  |
-| trackFgDisableColor | 不可滑动状态下，进度条颜色  | 
-| thumbSize | 滑块大小 | 
-| thumbStrokeSize | 滑块外圈大小，此处请直接给圆大小 |
+| 属性                      | 说明               |
+|-------------------------|------------------|
+| thumbEnableColor        | 可滑动状态下，滑块颜色      |
+| thumbDisableColor       | 不可滑动状态下，滑块颜色     |
+| thumbStrokeEnableColor  | 可滑动状态下，底层滑块颜色    |
+| thumbStrokeDisableColor | 不可滑动状态下，底层滑块颜色   |
+| trackBgEnableColor      | 可滑动状态下，度总长度颜色    | 
+| trackBgDisableColor     | 不可滑动状态下，进度总长度颜色  | 
+| trackFgEnableColor      | 可滑动状态下，进度条颜色     |
+| trackFgDisableColor     | 不可滑动状态下，进度条颜色    | 
+| thumbSize               | 滑块大小             | 
+| thumbStrokeSize         | 滑块外圈大小，此处请直接给圆大小 |
 
 #### 支持
 
